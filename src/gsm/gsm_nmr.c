@@ -19,6 +19,10 @@ gsmr_t gsm_nmr_enable(uint16_t refresh_period, const gsm_api_cmd_evt_fn evt_fn, 
 		const uint32_t blocking) {
 	GSM_MSG_VAR_DEFINE(msg);
 
+	if (refresh_period < 10 || refresh_period > 1200) {
+		return gsmPARERR;
+	}
+
 	GSM_MSG_VAR_ALLOC(msg);
 	GSM_MSG_VAR_SET_EVT(msg);
 	GSM_MSG_VAR_REF(msg).cmd_def = GSM_CMD_NMR_ENABLE;
@@ -37,7 +41,7 @@ gsmr_t gsm_nmr_enable(uint16_t refresh_period, const gsm_api_cmd_evt_fn evt_fn, 
  * \param[in]       blocking: Status whether command should be blocking or not
  * \return          \ref gsmOK on success, member of \ref gsmr_t enumeration otherwise
  */
-gsmr_t gsm_nmr_get_list(gsm_nmr_t *nmr, size_t max,
+gsmr_t gsm_nmr_get_list(gsm_nmr_t *nmr, size_t max, size_t *found,
 		const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking) {
 	GSM_MSG_VAR_DEFINE(msg);
 
@@ -48,6 +52,7 @@ gsmr_t gsm_nmr_get_list(gsm_nmr_t *nmr, size_t max,
 	GSM_MSG_VAR_REF(msg).msg.nmr_list.curr = nmr;
 	GSM_MSG_VAR_REF(msg).msg.nmr_list.etr = max;
 	GSM_MSG_VAR_REF(msg).msg.nmr_list.ei = 0;
+	GSM_MSG_VAR_REF(msg).msg.nmr_list.eif = found;
 
 	return gsmi_send_msg_to_producer_mbox(&GSM_MSG_VAR_REF(msg),
 			gsmi_initiate_cmd, 4000);

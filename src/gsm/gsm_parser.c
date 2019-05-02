@@ -974,3 +974,77 @@ gsmi_parse_ipd(const char* str) {
 }
 
 #endif /* GSM_CFG_CONN */
+
+#if GSM_CFG_NMR
+/**
+ * \brief			Parse NMR (Neighborhood measurement report)
+ * \param[in]		str: Input string
+ * \return          `1` on success, `0` otherwise
+ */
+uint8_t
+gsmi_parse_nmr(const char *str) {
+#define GET_NEXT_TOKEN(X)       \
+    delim = strchr(X, ',');     \
+    if (!delim || delim == X) { \
+        return 0;               \
+    }                           \
+    *delim = '\0';
+
+	gsm_nmr_t *nmr = gsm.msg->msg.nmr_list.curr;
+
+    if (strncmp(str, "+CELLIST: ", 10)) {
+        return 0;
+    }
+    char *e = NULL;
+    const char *p = str + 10;
+
+    char *delim = NULL;
+
+    GET_NEXT_TOKEN(p)
+    nmr->mcc = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->mnc = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->arcfn = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->rx_level = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->cell_id = strtol(p, &e, 16);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->location_area_code = strtol(p, &e, 16);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+#undef GET_NEXT_TOKEN
+
+    return 1;
+}
+
+#endif /* GSM_CFG_NMR */

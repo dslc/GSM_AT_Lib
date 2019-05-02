@@ -704,6 +704,15 @@ gsmi_parse_received(gsm_recv_t* rcv) {
             gsmi_parse_cpin(rcv->data, 1 /* !CMD_IS_DEF(GSM_CMD_CPIN_SET) */);  /* Parse +CPIN response */
         } else if (CMD_IS_CUR(GSM_CMD_COPS_GET) && !strncmp(rcv->data, "+COPS", 5)) {
             gsmi_parse_cops(rcv->data);         /* Parse current +COPS */
+#if GSM_CFG_NMR
+        } else if (CMD_IS_CUR(GSM_CMD_NMR_GET_LIST) && !strncmp(rcv->data, "+CELLIST", 8)
+        		&& gsm.msg->msg.nmr_list.ei < gsm.msg->msg.nmr_list.etr) {
+            if (gsmi_parse_nmr(rcv->data)) {
+            	gsm.msg->msg.nmr_list.curr++;
+                gsm.msg->msg.nmr_list.ei++;
+                (*gsm.msg->msg.nmr_list.eif)++;
+            }
+#endif /* GSM_CFG_NMR */
 #if GSM_CFG_SMS
         } else if (CMD_IS_CUR(GSM_CMD_CMGS) && !strncmp(rcv->data, "+CMGS", 5)) {
             gsmi_parse_cmgs(rcv->data, &gsm.msg->msg.sms_send.pos);  /* Parse +CMGS response */
@@ -2062,6 +2071,12 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
             gsmi_send_number(msg->msg.nmr_enable.refresh_period, 0, 0);
             GSM_AT_PORT_SEND_END();
         	break;
+        }
+        case GSM_CMD_NMR_GET_LIST: {
+            GSM_AT_PORT_SEND_BEGIN();
+            GSM_AT_PORT_SEND_CONST_STR("+CELLIST");
+            GSM_AT_PORT_SEND_END();
+            break;
         }
 #endif /* GSM_CFG_NMR */
         default:

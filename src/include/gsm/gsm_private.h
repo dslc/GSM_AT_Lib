@@ -511,9 +511,10 @@ typedef struct gsm_msg {
         	uint16_t refresh_period;
         } nmr_enable;
         struct {
-        	gsm_nmr_t *curr;
-        	size_t etr;
-        	size_t ei;
+        	gsm_nmr_t *curr;                    /*!< Operator array */
+        	size_t etr;                         /*!< Size of operator array */
+        	size_t ei;                          /*!< Current array index */
+        	size_t* eif;                        /*!< Final count for user */
         } nmr_list;
 #endif
     } msg;                                      /*!< Group of different possible message contents */
