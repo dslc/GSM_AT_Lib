@@ -211,7 +211,7 @@ typedef enum {
     GSM_CMD_CDNSGIP,                            /*!< Query the IP Address of Given Domain Name */
     GSM_CMD_CIPHEAD,                            /*!< Add an IP Head at the Beginning of a Package Received */
     GSM_CMD_CIPATS,                             /*!< Set Auto Sending Timer */
-    GSM_CMD_CIPSPRT,                            /*!< Set Prompt of ‘>’ When Module Sends Data */
+    GSM_CMD_CIPSPRT,                            /*!< Set Prompt of ï¿½>ï¿½ When Module Sends Data */
     GSM_CMD_CIPSERVER,                          /*!< Configure Module as Server */
     GSM_CMD_CIPCSGP,                            /*!< Set CSD or GPRS for Connection Mode */
     GSM_CMD_CIPSRIP,                            /*!< Show Remote IP Address and Port When Received Data */
@@ -247,6 +247,10 @@ typedef enum {
     GSM_CMD_CSDH,                               /*!< Show SMS Text Mode Parameters */
     GSM_CMD_CSMP,                               /*!< Set SMS Text Mode Parameters */
     GSM_CMD_CSMS,                               /*!< Select Message Service */
+
+	// Additional SIM800 commands
+	GSM_CMD_NMR_ENABLE,                         /*!< Enable neighborhood measurement reports */
+	GSM_CMD_NMR_GET_LIST,                       /*!< Get list of neighborhood measurement reports */
 
     GSM_CMD_END,                                /*!< Last CMD entry */
 } gsm_cmd_t;
@@ -502,6 +506,13 @@ typedef struct gsm_msg {
             const char* pass;                   /*!< APN password */
         } network_attach;                       /*!< Settings for network attach */
 #endif /* GSM_CFG_NETWORK || __DOXYGEN__ */
+#if GSM_CFG_NMR || __DOXYGEN__
+        struct {
+        	gsm_nmr_t *curr;
+        	size_t etr;
+        	size_t ei;
+        } nmr_list;
+#endif
     } msg;                                      /*!< Group of different possible message contents */
 } gsm_msg_t;
 

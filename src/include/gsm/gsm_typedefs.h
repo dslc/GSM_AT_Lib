@@ -271,6 +271,19 @@ typedef struct {
 } gsm_operator_curr_t;
 
 /**
+ * \ingroup			GSM_NMR
+ * \brief			Neighborhood measurement reports
+ */
+typedef struct {
+    uint16_t mcc;
+    uint16_t mnc;
+    uint16_t rx_level;
+    uint16_t arcfn;
+    uint16_t location_area_code;
+    uint16_t cell_id;
+} gsm_nmr_t;
+
+/**
  * \ingroup         GSM_NETWORK
  * \brief           Network Registration status
  */

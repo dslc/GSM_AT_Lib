@@ -397,6 +397,15 @@
  */
 
 /**
+ * \brief           Enables `1` or disables `0` neighborhood measurement reports (NMRs)
+ *
+ * \sa              GSM_CFG_OS
+ */
+#ifndef GSM_CFG_NMR
+#define GSM_CFG_NMR                     0
+#endif
+
+/**
  * \brief           Enables `1` or disables `0` NETCONN sequential API support for OS systems
  *
  * \note            To use this feature, OS support is mandatory.
