@@ -508,6 +508,9 @@ typedef struct gsm_msg {
 #endif /* GSM_CFG_NETWORK || __DOXYGEN__ */
 #if GSM_CFG_NMR || __DOXYGEN__
         struct {
+        	uint16_t refresh_period;
+        } nmr_enable;
+        struct {
         	gsm_nmr_t *curr;
         	size_t etr;
         	size_t ei;

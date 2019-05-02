@@ -21,7 +21,7 @@ extern "C" {
  * \{
  */
 
-gsmr_t      gsm_nmr_enable(const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
+gsmr_t      gsm_nmr_enable(uint16_t refresh_period, const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
 gsmr_t      gsm_nmr_get_list(gsm_nmr_t *nmr, size_t max, const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
 
 /**

@@ -433,6 +433,11 @@ typedef enum gsm_cb_type_t {
     GSM_EVT_PB_LIST,                            /*!< Phonebook list event */
     GSM_EVT_PB_SEARCH,                          /*!< Phonebook search event */
 #endif /* GSM_CFG_PHONEBOOK || __DOXYGEN__ */
+#if GSM_CFG_NMR || __DOXYGEN__
+	GSM_EVT_NMR_ENABLE,
+	GSM_EVT_NMR_DISABLE,
+	GSM_EVT_NMR_LIST,
+#endif /* GSM_CFG_NMR || __DOXYGEN__ */
 } gsm_evt_type_t;
 
 /**
