@@ -284,6 +284,26 @@ typedef struct {
 } gsm_nmr_t;
 
 /**
+ * \ingroup         GSM_BATTERY
+ * \brief           Battery charging status
+ */
+typedef enum {
+    GSM_BATTERY_NOT_CHARGING,
+    GSM_BATTERY_CHARGING,
+    GSM_BATTERY_CHARGED
+} gsm_battery_state_t;
+
+/**
+ * \ingroup         GSM_BATTERY
+ * \brief           Battery information
+ */
+typedef struct {
+    gsm_battery_state_t state;
+    uint8_t percent_remaining;
+    uint16_t voltage;
+} gsm_battery_info_t;
+
+/**
  * \ingroup         GSM_NETWORK
  * \brief           Network Registration status
  */

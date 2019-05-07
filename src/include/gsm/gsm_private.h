@@ -248,6 +248,8 @@ typedef enum {
     GSM_CMD_CSMP,                               /*!< Set SMS Text Mode Parameters */
     GSM_CMD_CSMS,                               /*!< Select Message Service */
 
+	GSM_CMD_BATTERY_INFO,                       /*!< Get battery information */
+
 	// Additional SIM800 commands
 	GSM_CMD_NMR_ENABLE,                         /*!< Enable neighborhood measurement reports */
 	GSM_CMD_NMR_GET_LIST,                       /*!< Get list of neighborhood measurement reports */
@@ -515,8 +517,11 @@ typedef struct gsm_msg {
         	size_t etr;                         /*!< Size of operator array */
         	size_t ei;                          /*!< Current array index */
         	size_t* eif;                        /*!< Final count for user */
-        } nmr_list;
+        } nmr_list;                             /*!< Get info about neighboring GSM cells */
 #endif
+        struct {
+        	gsm_battery_info_t *curr;
+        } battery_info;                         /*!< Get battery info */
     } msg;                                      /*!< Group of different possible message contents */
 } gsm_msg_t;
 

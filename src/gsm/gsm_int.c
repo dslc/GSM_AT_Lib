@@ -753,6 +753,8 @@ gsmi_parse_received(gsm_recv_t* rcv) {
         } else if (CMD_IS_CUR(GSM_CMD_CPBF) && !strncmp(rcv->data, "+CPBF", 5)) {
             gsmi_parse_cpbf(rcv->data);         /* Parse +CPBR statement */
 #endif /* GSM_CFG_PHONEBOOK */
+        } else if (CMD_IS_CUR(GSM_CMD_BATTERY_INFO) && !strncmp(rcv->data, "+CBC", 4)) {
+        	gsmi_parse_battery_info(rcv->data);
         }
 
     /* Messages not starting with '+' sign */
@@ -2079,6 +2081,12 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
             break;
         }
 #endif /* GSM_CFG_NMR */
+        case GSM_CMD_BATTERY_INFO: {
+            GSM_AT_PORT_SEND_BEGIN();
+            GSM_AT_PORT_SEND_CONST_STR("+CBC");
+            GSM_AT_PORT_SEND_END();
+        	break;
+        }
         default:
             return gsmERR;                      /* Invalid command */
     }
