@@ -710,7 +710,7 @@ gsmi_parse_received(gsm_recv_t* rcv) {
             if (gsmi_parse_nmr(rcv->data)) {
             	gsm.msg->msg.nmr_list.curr++;
                 gsm.msg->msg.nmr_list.ei++;
-                (*gsm.msg->msg.nmr_list.eif)++;
+                (*gsm.msg->msg.nmr_list.eif) = gsm.msg->msg.nmr_list.ei;
             }
 #endif /* GSM_CFG_NMR */
 #if GSM_CFG_SMS

@@ -70,6 +70,8 @@ uint8_t     gsmi_parse_ipd(const char* str);
 
 uint8_t     gsmi_parse_nmr(const char *str);
 
+uint8_t     gsmi_parse_battery_info(const char *str);
+
 #if defined(__cplusplus)
 }
 #endif /* defined(__cplusplus) */
