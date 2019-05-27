@@ -7,6 +7,8 @@
 #include "gsm/gsm_nmr.h"
 #include "gsm/gsm_mem.h"
 
+#if GSM_CFG_NMR || __DOXYGEN__
+
 /**
  * \brief           Enable Neighborhood Measurement Reports
  * \param[in]       refresh_period: Period for refreshing cell list
@@ -57,3 +59,5 @@ gsmr_t gsm_nmr_get_list(gsm_nmr_t *nmr, size_t max, size_t *found,
 	return gsmi_send_msg_to_producer_mbox(&GSM_MSG_VAR_REF(msg),
 			gsmi_initiate_cmd, 4000);
 }
+
+#endif
