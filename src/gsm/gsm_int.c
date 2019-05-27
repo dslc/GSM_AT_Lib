@@ -1473,21 +1473,14 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
 #if GSM_CFG_NETWORK
     } if (CMD_IS_DEF(GSM_CMD_NETWORK_ATTACH)) {
         switch (msg->i) {
-            case 0: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CGACT_SET_0); break;
-            case 1: SET_NEW_CMD(GSM_CMD_CGACT_SET_1); break;
-#if GSM_CFG_NETWORK_IGNORE_CGACT_RESULT
-            case 2: SET_NEW_CMD(GSM_CMD_CGATT_SET_0); break;
-#else /* GSM_CFG_NETWORK_IGNORE_CGACT_RESULT */
-            case 2: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CGATT_SET_0); break;
-#endif /* !GSM_CFG_NETWORK_IGNORE_CGACT_RESULT */
-            case 3: SET_NEW_CMD(GSM_CMD_CGATT_SET_1); break;
-            case 4: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPSHUT); break;
-            case 5: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPMUX_SET); break;
-            case 6: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPRXGET_SET); break;
-            case 7: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CSTT_SET); break;
-            case 8: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIICR); break;
-            case 9: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIFSR); break;
-            case 10: SET_NEW_CMD(GSM_CMD_CIPSTATUS); break;
+            case 0: SET_NEW_CMD(GSM_CMD_CGATT_SET_1); break;
+            case 1: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPSHUT); break;
+            case 2: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPMUX_SET); break;
+            case 3: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPRXGET_SET); break;
+            case 4: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CSTT_SET); break;
+            case 5: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIICR); break;
+            case 6: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIFSR); break;
+            case 7: SET_NEW_CMD(GSM_CMD_CIPSTATUS); break;
             default: break;
         }
     } else if (CMD_IS_DEF(GSM_CMD_NETWORK_DETACH)) {
