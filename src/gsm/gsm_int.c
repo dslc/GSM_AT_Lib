@@ -1536,7 +1536,13 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
             }
         }
 #endif /* GSM_CFG_CONN */
-    }
+#if GSM_CFG_NMR
+    } else if (CMD_IS_DEF(GSM_CMD_NMR_ENABLE)) {
+    	gsmi_send_cb(GSM_EVT_NMR_ENABLE);
+    } else if (CMD_IS_DEF(GSM_CMD_NMR_GET_LIST)) {
+    	gsmi_send_cb(GSM_EVT_NMR_LIST);
+#endif
+    } /* GSM_CFG_NMR */
 
     /* Check if new command was set for execution */
     if (n_cmd != GSM_CMD_IDLE) {
