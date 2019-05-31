@@ -2135,7 +2135,7 @@ gsmi_send_msg_to_producer_mbox(gsm_msg_t* msg, gsmr_t (*process_fn)(gsm_msg_t *)
     } else {
         if (!gsm_sys_mbox_putnow(&gsm.mbox_producer, msg)) {    /* Write message to producer queue immediatelly */
             GSM_MSG_VAR_FREE(msg);              /* Release message */
-            res = gsmERR;
+            return gsmERR;
         }
     }
     if (msg->is_blocking && res == gsmOK) {     /* In case we have blocking request */
