@@ -974,3 +974,139 @@ gsmi_parse_ipd(const char* str) {
 }
 
 #endif /* GSM_CFG_CONN */
+
+#if GSM_CFG_NMR
+/**
+ * \brief			Parse NMR (Neighborhood measurement report)
+ * \param[in]		str: Input string
+ * \return          `1` on success, `0` otherwise
+ */
+uint8_t
+gsmi_parse_nmr(const char *str) {
+#define GET_NEXT_TOKEN(X)       \
+    delim = strchr(X, ',');     \
+    if (!delim || delim == X) { \
+        return 0;               \
+    }                           \
+    *delim = '\0';
+
+	gsm_nmr_t *nmr = gsm.msg->msg.nmr_list.curr;
+
+    if (strncmp(str, "+CELLIST: ", 10)) {
+        return 0;
+    }
+    char *e = NULL;
+    const char *p = str + 10;
+
+    char *delim = NULL;
+
+    GET_NEXT_TOKEN(p)
+    nmr->mcc = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->mnc = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->arcfn = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->rx_level = strtol(p, &e, 10);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->cell_id = strtol(p, &e, 16);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+    GET_NEXT_TOKEN(p)
+    nmr->location_area_code = strtol(p, &e, 16);
+    if (*e != '\0') {
+        return 0;
+    }
+    p = delim + 1;
+
+#undef GET_NEXT_TOKEN
+
+    return 1;
+}
+
+#endif /* GSM_CFG_NMR */
+
+/**
+ * \brief         Parse battery information
+ * \param[in]     str: Input string
+ * \return        `1` on success, `0` otherwise
+ */
+uint8_t
+gsmi_parse_battery_info(const char *str) {
+	char *delim = NULL;
+	gsm_battery_info_t *b = gsm.msg->msg.battery_info.curr;
+
+	if (strncmp(str, "+CBC", 4)) {
+		return 0;
+	}
+	str += 6;
+
+	if (!str) {
+		return 0;
+	}
+
+	delim = strchr(str, ',');
+	if (!delim || delim == str || delim - str > 1) {
+		return 0;
+	}
+
+	// Charging status
+	char c = *str;
+	if (c < '0' || c > '2') {
+		return 0;
+	}
+	switch (c) {
+	case '0':
+		b->state = GSM_BATTERY_NOT_CHARGING;
+		break;
+	case '1':
+		b->state = GSM_BATTERY_CHARGING;
+		break;
+	case '2':
+		b->state = GSM_BATTERY_CHARGED;
+		break;
+	default:
+		break;
+	}
+	str = delim + 1;
+
+	// Percent remaining
+	int32_t percent = gsmi_parse_number(&str);
+	if (percent < 0 || percent > 100) {
+		return 0;
+	}
+	b->percent_remaining = percent;
+	str++;
+	if (!str) {
+		return 0;
+	}
+
+	// Voltage
+	b->voltage = gsmi_parse_number(&str);
+
+	return 1;
+}
+

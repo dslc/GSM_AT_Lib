@@ -271,6 +271,39 @@ typedef struct {
 } gsm_operator_curr_t;
 
 /**
+ * \ingroup			GSM_NMR
+ * \brief			Neighborhood measurement reports
+ */
+typedef struct {
+    uint16_t mcc;
+    uint16_t mnc;
+    uint16_t rx_level;
+    uint16_t arcfn;
+    uint16_t location_area_code;
+    uint16_t cell_id;
+} gsm_nmr_t;
+
+/**
+ * \ingroup         GSM_BATTERY
+ * \brief           Battery charging status
+ */
+typedef enum {
+    GSM_BATTERY_NOT_CHARGING,
+    GSM_BATTERY_CHARGING,
+    GSM_BATTERY_CHARGED
+} gsm_battery_state_t;
+
+/**
+ * \ingroup         GSM_BATTERY
+ * \brief           Battery information
+ */
+typedef struct {
+    gsm_battery_state_t state;
+    uint8_t percent_remaining;
+    uint16_t voltage;
+} gsm_battery_info_t;
+
+/**
  * \ingroup         GSM_NETWORK
  * \brief           Network Registration status
  */
@@ -420,6 +453,11 @@ typedef enum gsm_cb_type_t {
     GSM_EVT_PB_LIST,                            /*!< Phonebook list event */
     GSM_EVT_PB_SEARCH,                          /*!< Phonebook search event */
 #endif /* GSM_CFG_PHONEBOOK || __DOXYGEN__ */
+#if GSM_CFG_NMR || __DOXYGEN__
+	GSM_EVT_NMR_ENABLE,
+	GSM_EVT_NMR_DISABLE,
+	GSM_EVT_NMR_LIST,
+#endif /* GSM_CFG_NMR || __DOXYGEN__ */
 } gsm_evt_type_t;
 
 /**

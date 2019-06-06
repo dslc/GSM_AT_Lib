@@ -704,6 +704,15 @@ gsmi_parse_received(gsm_recv_t* rcv) {
             gsmi_parse_cpin(rcv->data, 1 /* !CMD_IS_DEF(GSM_CMD_CPIN_SET) */);  /* Parse +CPIN response */
         } else if (CMD_IS_CUR(GSM_CMD_COPS_GET) && !strncmp(rcv->data, "+COPS", 5)) {
             gsmi_parse_cops(rcv->data);         /* Parse current +COPS */
+#if GSM_CFG_NMR
+        } else if (CMD_IS_CUR(GSM_CMD_NMR_GET_LIST) && !strncmp(rcv->data, "+CELLIST", 8)
+        		&& gsm.msg->msg.nmr_list.ei < gsm.msg->msg.nmr_list.etr) {
+            if (gsmi_parse_nmr(rcv->data)) {
+            	gsm.msg->msg.nmr_list.curr++;
+                gsm.msg->msg.nmr_list.ei++;
+                (*gsm.msg->msg.nmr_list.eif) = gsm.msg->msg.nmr_list.ei;
+            }
+#endif /* GSM_CFG_NMR */
 #if GSM_CFG_SMS
         } else if (CMD_IS_CUR(GSM_CMD_CMGS) && !strncmp(rcv->data, "+CMGS", 5)) {
             gsmi_parse_cmgs(rcv->data, &gsm.msg->msg.sms_send.pos);  /* Parse +CMGS response */
@@ -744,6 +753,8 @@ gsmi_parse_received(gsm_recv_t* rcv) {
         } else if (CMD_IS_CUR(GSM_CMD_CPBF) && !strncmp(rcv->data, "+CPBF", 5)) {
             gsmi_parse_cpbf(rcv->data);         /* Parse +CPBR statement */
 #endif /* GSM_CFG_PHONEBOOK */
+        } else if (CMD_IS_CUR(GSM_CMD_BATTERY_INFO) && !strncmp(rcv->data, "+CBC", 4)) {
+        	gsmi_parse_battery_info(rcv->data);
         }
 
     /* Messages not starting with '+' sign */
@@ -1462,21 +1473,14 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
 #if GSM_CFG_NETWORK
     } if (CMD_IS_DEF(GSM_CMD_NETWORK_ATTACH)) {
         switch (msg->i) {
-            case 0: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CGACT_SET_0); break;
-            case 1: SET_NEW_CMD(GSM_CMD_CGACT_SET_1); break;
-#if GSM_CFG_NETWORK_IGNORE_CGACT_RESULT
-            case 2: SET_NEW_CMD(GSM_CMD_CGATT_SET_0); break;
-#else /* GSM_CFG_NETWORK_IGNORE_CGACT_RESULT */
-            case 2: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CGATT_SET_0); break;
-#endif /* !GSM_CFG_NETWORK_IGNORE_CGACT_RESULT */
-            case 3: SET_NEW_CMD(GSM_CMD_CGATT_SET_1); break;
-            case 4: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPSHUT); break;
-            case 5: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPMUX_SET); break;
-            case 6: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPRXGET_SET); break;
-            case 7: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CSTT_SET); break;
-            case 8: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIICR); break;
-            case 9: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIFSR); break;
-            case 10: SET_NEW_CMD(GSM_CMD_CIPSTATUS); break;
+            case 0: SET_NEW_CMD(GSM_CMD_CGATT_SET_1); break;
+            case 1: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPSHUT); break;
+            case 2: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPMUX_SET); break;
+            case 3: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIPRXGET_SET); break;
+            case 4: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CSTT_SET); break;
+            case 5: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIICR); break;
+            case 6: SET_NEW_CMD_CHECK_ERROR(GSM_CMD_CIFSR); break;
+            case 7: SET_NEW_CMD(GSM_CMD_CIPSTATUS); break;
             default: break;
         }
     } else if (CMD_IS_DEF(GSM_CMD_NETWORK_DETACH)) {
@@ -1532,7 +1536,13 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
             }
         }
 #endif /* GSM_CFG_CONN */
-    }
+#if GSM_CFG_NMR
+    } else if (CMD_IS_DEF(GSM_CMD_NMR_ENABLE)) {
+    	gsmi_send_cb(GSM_EVT_NMR_ENABLE);
+    } else if (CMD_IS_DEF(GSM_CMD_NMR_GET_LIST)) {
+    	gsmi_send_cb(GSM_EVT_NMR_LIST);
+#endif
+    } /* GSM_CFG_NMR */
 
     /* Check if new command was set for execution */
     if (n_cmd != GSM_CMD_IDLE) {
@@ -2063,6 +2073,27 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
             break;
         }
 #endif /* GSM_CFG_NETWORK */
+#if GSM_CFG_NMR
+        case GSM_CMD_NMR_ENABLE: {
+            GSM_AT_PORT_SEND_BEGIN();
+            GSM_AT_PORT_SEND_CONST_STR("+CELLIST=1,");
+            gsmi_send_number(msg->msg.nmr_enable.refresh_period, 0, 0);
+            GSM_AT_PORT_SEND_END();
+        	break;
+        }
+        case GSM_CMD_NMR_GET_LIST: {
+            GSM_AT_PORT_SEND_BEGIN();
+            GSM_AT_PORT_SEND_CONST_STR("+CELLIST");
+            GSM_AT_PORT_SEND_END();
+            break;
+        }
+#endif /* GSM_CFG_NMR */
+        case GSM_CMD_BATTERY_INFO: {
+            GSM_AT_PORT_SEND_BEGIN();
+            GSM_AT_PORT_SEND_CONST_STR("+CBC");
+            GSM_AT_PORT_SEND_END();
+        	break;
+        }
         default:
             return gsmERR;                      /* Invalid command */
     }
@@ -2112,7 +2143,7 @@ gsmi_send_msg_to_producer_mbox(gsm_msg_t* msg, gsmr_t (*process_fn)(gsm_msg_t *)
     } else {
         if (!gsm_sys_mbox_putnow(&gsm.mbox_producer, msg)) {    /* Write message to producer queue immediatelly */
             GSM_MSG_VAR_FREE(msg);              /* Release message */
-            res = gsmERR;
+            return gsmERR;
         }
     }
     if (msg->is_blocking && res == gsmOK) {     /* In case we have blocking request */

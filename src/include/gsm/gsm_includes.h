@@ -48,6 +48,7 @@ extern "C" {
 #include "gsm/gsm_operator.h"
 #include "gsm/gsm_evt.h"
 #include "gsm/gsm_network.h"
+#include "gsm/gsm_nmr.h"
 #include "gsm/gsm_device_info.h"
 #include "system/gsm_sys.h"
 
@@ -66,6 +67,9 @@ extern "C" {
 #if GSM_CFG_NETCONN || __DOXYGEN__
 #include "gsm/gsm_netconn.h"
 #endif /* GSM_CFG_NETCONN || __DOXYGEN__ */
+#if GSM_CFG_NMR || __DOXYGEN__
+#include "gsm/gsm_nmr.h"
+#endif
 
 #ifdef __cplusplus
 }
