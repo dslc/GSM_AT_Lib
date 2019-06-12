@@ -2075,23 +2075,23 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
 #endif /* GSM_CFG_NETWORK */
 #if GSM_CFG_NMR
         case GSM_CMD_NMR_ENABLE: {
-            GSM_AT_PORT_SEND_BEGIN();
-            GSM_AT_PORT_SEND_CONST_STR("+CELLIST=1,");
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+CELLIST=1,");
             gsmi_send_number(msg->msg.nmr_enable.refresh_period, 0, 0);
-            GSM_AT_PORT_SEND_END();
+            AT_PORT_SEND_END();
         	break;
         }
         case GSM_CMD_NMR_GET_LIST: {
-            GSM_AT_PORT_SEND_BEGIN();
-            GSM_AT_PORT_SEND_CONST_STR("+CELLIST");
-            GSM_AT_PORT_SEND_END();
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+CELLIST");
+        	AT_PORT_SEND_END();
             break;
         }
 #endif /* GSM_CFG_NMR */
         case GSM_CMD_BATTERY_INFO: {
-            GSM_AT_PORT_SEND_BEGIN();
-            GSM_AT_PORT_SEND_CONST_STR("+CBC");
-            GSM_AT_PORT_SEND_END();
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+CBC");
+            AT_PORT_SEND_END();
         	break;
         }
         default:
