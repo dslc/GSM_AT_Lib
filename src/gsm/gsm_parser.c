@@ -1110,3 +1110,24 @@ gsmi_parse_battery_info(const char *str) {
 	return 1;
 }
 
+#if GSM_CFG_TOOLKIT
+/**
+ * \brief         Parse SIM application toolkit URC
+ * \param[in]     str: Input string
+ * \return        `1` on success, `0` otherwise
+ */
+uint8_t
+gsmi_parse_toolkit_urc(const char *str) {
+	char *nl = strstr(str, "\r\n");
+	if (!nl) {
+		return 0;
+	}
+	*nl = '\0';
+	int len = strlen(str);
+	strcpy(gsm.m.toolkit_urc_buf->buf, str);
+	gsm.m.toolkit_urc_buf->len = len;
+
+	gsmi_send_cb(GSM_EVT_TOOLKIT_URC);
+	return 1;
+}
+#endif

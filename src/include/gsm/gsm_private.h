@@ -654,6 +654,9 @@ typedef struct {
 #if GSM_CFG_CALL || __DOXYGEN__
     gsm_call_t          call;                   /*!< Call information */
 #endif /* GSM_CFG_CALL || __DOXYGEN__ */
+#if GSM_CFG_TOOLKIT || __DOXYGEN__
+    gsm_toolkit_urc_t   *toolkit_urc_buf;
+#endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
 } gsm_modules_t;
 
 /**

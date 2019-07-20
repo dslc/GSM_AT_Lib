@@ -460,6 +460,7 @@ typedef enum gsm_cb_type_t {
 #endif /* GSM_CFG_NMR || __DOXYGEN__ */
 #if GSM_CFG_TOOLKIT || __DOXYGEN__
 	GSM_EVT_TOOLKIT_ENABLE,
+	GSM_EVT_TOOLKIT_URC,
 #endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
 } gsm_evt_type_t;
 

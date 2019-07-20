@@ -713,6 +713,10 @@ gsmi_parse_received(gsm_recv_t* rcv) {
                 (*gsm.msg->msg.nmr_list.eif) = gsm.msg->msg.nmr_list.ei;
             }
 #endif /* GSM_CFG_NMR */
+#if GSM_CFG_TOOLKIT
+        } else if (!strncmp(rcv->data, "+STKPCI", 7)) {
+        	gsmi_parse_toolkit_urc(rcv->data);
+#endif /* GSM_CFG_TOOLKIT */
 #if GSM_CFG_SMS
         } else if (CMD_IS_CUR(GSM_CMD_CMGS) && !strncmp(rcv->data, "+CMGS", 5)) {
             gsmi_parse_cmgs(rcv->data, &gsm.msg->msg.sms_send.pos);  /* Parse +CMGS response */

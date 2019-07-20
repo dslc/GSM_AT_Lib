@@ -12,7 +12,12 @@ extern "C" {
 
 #include "gsm/gsm.h"
 
-gsmr_t      gsm_toolkit_enable(const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
+typedef struct {
+	char buf[128];
+	int len;
+} gsm_toolkit_urc_t;
+
+gsmr_t      gsm_toolkit_enable(gsm_toolkit_urc_t *urc_buf, const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
 
 #ifdef __cplusplus
 }

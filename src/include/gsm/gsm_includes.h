@@ -49,6 +49,7 @@ extern "C" {
 #include "gsm/gsm_evt.h"
 #include "gsm/gsm_network.h"
 #include "gsm/gsm_nmr.h"
+#include "gsm/gsm_toolkit.h"
 #include "gsm/gsm_device_info.h"
 #include "system/gsm_sys.h"
 
