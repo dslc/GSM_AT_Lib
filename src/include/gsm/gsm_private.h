@@ -254,6 +254,9 @@ typedef enum {
 	GSM_CMD_NMR_ENABLE,                         /*!< Enable neighborhood measurement reports */
 	GSM_CMD_NMR_GET_LIST,                       /*!< Get list of neighborhood measurement reports */
 
+	// SIM application toolkit commands
+	GSM_CMD_TOOLKIT_ENABLE,						/*!< Enable SIM application toolkit functionality */
+
     GSM_CMD_END,                                /*!< Last CMD entry */
 } gsm_cmd_t;
 

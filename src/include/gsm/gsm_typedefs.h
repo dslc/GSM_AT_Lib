@@ -458,6 +458,9 @@ typedef enum gsm_cb_type_t {
 	GSM_EVT_NMR_DISABLE,
 	GSM_EVT_NMR_LIST,
 #endif /* GSM_CFG_NMR || __DOXYGEN__ */
+#if GSM_CFG_TOOLKIT || __DOXYGEN__
+	GSM_EVT_TOOLKIT_ENABLE,
+#endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
 } gsm_evt_type_t;
 
 /**
@@ -566,6 +569,11 @@ typedef struct gsm_evt {
             gsmr_t res;                         /*!< Operation success */
         } pb_search;                            /*!< Phonebok search list. Use with \ref GSM_EVT_PB_SEARCH event */
 #endif /* GSM_CFG_PHONEBOOK || __DOXYGEN__ */
+#if GSM_CFG_TOOLKIT || __DOXYGEN__
+        struct {
+        	gsmr_t res;
+        } toolkit_enable;
+#endif /*  */
     } evt;                                      /*!< Callback event union */
 } gsm_evt_t;
 

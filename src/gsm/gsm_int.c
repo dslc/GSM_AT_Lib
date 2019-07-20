@@ -1541,8 +1541,14 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
     	gsmi_send_cb(GSM_EVT_NMR_ENABLE);
     } else if (CMD_IS_DEF(GSM_CMD_NMR_GET_LIST)) {
     	gsmi_send_cb(GSM_EVT_NMR_LIST);
-#endif
-    } /* GSM_CFG_NMR */
+#endif  /* GSM_CFG_NMR */
+#if GSM_CFG_TOOLKIT
+    }
+    else if (CMD_IS_DEF(GSM_CMD_TOOLKIT_ENABLE)) {
+    	gsm.evt.evt.toolkit_enable.res = is_ok ? gsmOK : gsmERR;
+    	gsmi_send_cb(GSM_EVT_TOOLKIT_ENABLE);
+#endif /* GSM_CFG_TOOLKIT */
+    }
 
     /* Check if new command was set for execution */
     if (n_cmd != GSM_CMD_IDLE) {
@@ -2088,6 +2094,14 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
             break;
         }
 #endif /* GSM_CFG_NMR */
+#if GSM_CFG_TOOLKIT
+        case GSM_CMD_TOOLKIT_ENABLE: {
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+STKPCIS=1");
+        	AT_PORT_SEND_END();
+        	break;
+        }
+#endif /* GSM_CFG_TOOLKIT */
         case GSM_CMD_BATTERY_INFO: {
         	AT_PORT_SEND_BEGIN();
         	AT_PORT_SEND_CONST_STR("+CBC");
