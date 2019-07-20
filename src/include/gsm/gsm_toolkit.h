@@ -18,6 +18,7 @@ typedef struct {
 } gsm_toolkit_urc_t;
 
 gsmr_t      gsm_toolkit_enable(gsm_toolkit_urc_t *urc_buf, const gsm_api_cmd_evt_fn evt_fn, void* const evt_arg, const uint32_t blocking);
+gsmr_t		gsm_toolkit_raw_command(const char *cmd, const gsm_api_cmd_evt_fn evt_fn, void *const evt_arg, const uint32_t blocking);
 
 #ifdef __cplusplus
 }

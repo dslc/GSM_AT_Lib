@@ -2105,6 +2105,11 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
         	AT_PORT_SEND_END();
         	break;
         }
+        case GSM_CMD_TOOLKIT_RAW_CMD: {
+        	AT_PORT_SEND_CONST_STR(msg->msg.toolkit_cmd.cmd);
+        	AT_PORT_SEND_END();
+        	break;
+        }
 #endif /* GSM_CFG_TOOLKIT */
         case GSM_CMD_BATTERY_INFO: {
         	AT_PORT_SEND_BEGIN();
