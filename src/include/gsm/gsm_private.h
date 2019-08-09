@@ -257,6 +257,7 @@ typedef enum {
 	// SIM application toolkit commands
 	GSM_CMD_TOOLKIT_ENABLE,						/*!< Enable SIM application toolkit functionality */
 	GSM_CMD_TOOLKIT_RAW_CMD,					/*!< Send a raw command to the SIM application toolkit */
+	GSM_CMD_TOOLKIT_RESPONSE,					/*!< Send a terminal response to teh SIM application toolkit */
 
     GSM_CMD_END,                                /*!< Last CMD entry */
 } gsm_cmd_t;
@@ -527,6 +528,11 @@ typedef struct gsm_msg {
         struct {
         	char cmd[48];
         } toolkit_cmd;
+        struct {
+        	char result[3];
+        	char text[3];
+        	uint8_t use_text;
+        } toolkit_response;
 #endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
         struct {
         	gsm_battery_info_t *curr;

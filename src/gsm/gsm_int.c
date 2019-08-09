@@ -1551,6 +1551,9 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
     else if (CMD_IS_DEF(GSM_CMD_TOOLKIT_ENABLE)) {
     	gsm.evt.evt.toolkit_enable.res = is_ok ? gsmOK : gsmERR;
     	gsmi_send_cb(GSM_EVT_TOOLKIT_ENABLE);
+    } else if (CMD_IS_DEF(GSM_CMD_TOOLKIT_RESPONSE)) {
+    	gsm.evt.evt.toolkit_response.res = is_ok ? gsmOK : gsmERR;
+    	gsmi_send_cb(GSM_EVT_TOOLKIT_RESPONSE);
 #endif /* GSM_CFG_TOOLKIT */
     }
 
@@ -2107,6 +2110,16 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
         }
         case GSM_CMD_TOOLKIT_RAW_CMD: {
         	AT_PORT_SEND_CONST_STR(msg->msg.toolkit_cmd.cmd);
+        	AT_PORT_SEND_END();
+        	break;
+        }
+        case GSM_CMD_TOOLKIT_RESPONSE: {
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+STKTRS=");
+        	gsmi_send_string(msg->msg.toolkit_response.result, 0, 0, 0);
+        	if (msg->msg.toolkit_response.use_text) {
+            	gsmi_send_string(msg->msg.toolkit_response.text, 0, 0, 1);
+        	}
         	AT_PORT_SEND_END();
         	break;
         }
