@@ -1117,7 +1117,7 @@ gsmi_parse_battery_info(const char *str) {
  * \return        `1` on success, `0` otherwise
  */
 uint8_t
-gsmi_parse_toolkit_urc(const char *str) {
+gsmi_parse_stkpci(const char *str) {
 	char *nl = strstr(str, "\r\n");
 	if (!nl) {
 		return 0;
@@ -1128,6 +1128,20 @@ gsmi_parse_toolkit_urc(const char *str) {
 	gsm.m.toolkit_urc_buf->len = len;
 
 	gsmi_send_cb(GSM_EVT_TOOLKIT_URC);
+	return 1;
+}
+
+/**
+ * \brief		Parse response to AT+STKPCIS? query
+ * \param[in]	str: Input string
+ * \return		`1` on success, `0` otherwise
+ */
+uint8_t gsmi_parse_stkpcis(const char *str) {
+	char *val = str+10;
+
+	gsm.evt.evt.toolkit_enabled.enabled = *val == '1' ? 1 : 0;
+
+	gsmi_send_cb(GSM_EVT_TOOLKIT_ENABLED);
 	return 1;
 }
 #endif

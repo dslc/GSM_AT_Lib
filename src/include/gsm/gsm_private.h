@@ -256,8 +256,10 @@ typedef enum {
 
 	// SIM application toolkit commands
 	GSM_CMD_TOOLKIT_ENABLE,						/*!< Enable SIM application toolkit functionality */
+	GSM_CMD_TOOLKIT_ENABLED,				/*!< Check if URCs are enabled for the SIM application toolkit */
 	GSM_CMD_TOOLKIT_RAW_CMD,					/*!< Send a raw command to the SIM application toolkit */
 	GSM_CMD_TOOLKIT_RESPONSE,					/*!< Send a terminal response to teh SIM application toolkit */
+	GSM_CMD_SAVE_PROFILE,						/*!< Save the current SIM profile */
 
     GSM_CMD_END,                                /*!< Last CMD entry */
 } gsm_cmd_t;

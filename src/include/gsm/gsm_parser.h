@@ -72,6 +72,9 @@ uint8_t     gsmi_parse_nmr(const char *str);
 
 uint8_t     gsmi_parse_battery_info(const char *str);
 
+uint8_t 	gsmi_parse_stkpci(const char *);
+uint8_t 	gsmi_parse_stkpcis(const char *);
+
 #if defined(__cplusplus)
 }
 #endif /* defined(__cplusplus) */

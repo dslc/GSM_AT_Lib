@@ -714,8 +714,10 @@ gsmi_parse_received(gsm_recv_t* rcv) {
             }
 #endif /* GSM_CFG_NMR */
 #if GSM_CFG_TOOLKIT
-        } else if (!strncmp(rcv->data, "+STKPCI", 7)) {
-        	gsmi_parse_toolkit_urc(rcv->data);
+        } else if (!strncmp(rcv->data, "+STKPCI:", 8)) {
+        	gsmi_parse_stkpci(rcv->data);
+        } else if (!strncmp(rcv->data, "+STKPCIS:", 9)) {
+        	gsmi_parse_stkpcis(rcv->data);
 #endif /* GSM_CFG_TOOLKIT */
 #if GSM_CFG_SMS
         } else if (CMD_IS_CUR(GSM_CMD_CMGS) && !strncmp(rcv->data, "+CMGS", 5)) {
@@ -1554,6 +1556,9 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
     } else if (CMD_IS_DEF(GSM_CMD_TOOLKIT_RESPONSE)) {
     	gsm.evt.evt.toolkit_response.res = is_ok ? gsmOK : gsmERR;
     	gsmi_send_cb(GSM_EVT_TOOLKIT_RESPONSE);
+    } else if (CMD_IS_DEF(GSM_CMD_SAVE_PROFILE)) {
+    	gsm.evt.evt.save_profile.res = is_ok ? gsmOK : gsmERR;
+    	gsmi_send_cb(GSM_EVT_PROFILE_SAVED);
 #endif /* GSM_CFG_TOOLKIT */
     }
 
@@ -2108,6 +2113,12 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
         	AT_PORT_SEND_END();
         	break;
         }
+        case GSM_CMD_TOOLKIT_ENABLED: {
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+STKPCIS?");
+        	AT_PORT_SEND_END();
+        	break;
+        }
         case GSM_CMD_TOOLKIT_RAW_CMD: {
         	AT_PORT_SEND_CONST_STR(msg->msg.toolkit_cmd.cmd);
         	AT_PORT_SEND_END();
@@ -2120,6 +2131,12 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
         	if (msg->msg.toolkit_response.use_text) {
             	gsmi_send_string(msg->msg.toolkit_response.text, 0, 0, 1);
         	}
+        	AT_PORT_SEND_END();
+        	break;
+        }
+        case GSM_CMD_SAVE_PROFILE: {
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("&W");
         	AT_PORT_SEND_END();
         	break;
         }
