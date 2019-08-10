@@ -10,6 +10,15 @@
 #if GSM_CFG_TOOLKIT || __DOXYGEN__
 
 /**
+ * \brief			Initialize the SIM application toolkit interface
+ *
+ * \param[in]		urc_buf: Buffer for SIM application toolkit URCs (Unsolicited Response Codes)
+ */
+void gsm_toolkit_init(gsm_toolkit_urc_t *urc_buf) {
+	gsm.m.toolkit_urc_buf = urc_buf;
+}
+
+/**
  * \brief           Enable URCs (unsolicted response codes) for SIM application toolkit
  * \param[in]		urc_buf: Buffer for storing unsolicited response codes
  * \param[in]       evt_fn: Callback function called when command has finished. Set to `NULL` when not used
