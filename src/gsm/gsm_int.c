@@ -1559,6 +1559,9 @@ gsmi_process_sub_cmd(gsm_msg_t* msg, uint8_t* is_ok, uint16_t* is_error) {
     } else if (CMD_IS_DEF(GSM_CMD_SAVE_PROFILE)) {
     	gsm.evt.evt.save_profile.res = is_ok ? gsmOK : gsmERR;
     	gsmi_send_cb(GSM_EVT_PROFILE_SAVED);
+    } else if (CMD_IS_DEF(GSM_CMD_RESTRICTED_SIM_ACCESS)) {
+    	gsm.evt.evt.restricted_sim_access.res = is_ok ? gsmOK : gsmERR;
+    	gsmi_send_cb(GSM_EVT_RESTRICTED_SIM_ACCESS);
 #endif /* GSM_CFG_TOOLKIT */
     }
 
@@ -2139,6 +2142,17 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
         	AT_PORT_SEND_CONST_STR("&W");
         	AT_PORT_SEND_END();
         	break;
+        }
+        case GSM_CMD_RESTRICTED_SIM_ACCESS: {
+        	AT_PORT_SEND_BEGIN();
+        	AT_PORT_SEND_CONST_STR("+CRSM=");
+            gsmi_send_number(GSM_U32(msg->msg.restricted_sim_access.command), 0, 0);
+            gsmi_send_number(GSM_U32(msg->msg.restricted_sim_access.fileId), 0, 1);
+            for (int i=0; i<3; i++) {
+                gsmi_send_number(GSM_U32(msg->msg.restricted_sim_access.param[i]), 0, 1);
+            }
+        	gsmi_send_string(msg->msg.restricted_sim_access.data, 0, 1, 1);
+        	AT_PORT_SEND_END();
         }
 #endif /* GSM_CFG_TOOLKIT */
         case GSM_CMD_BATTERY_INFO: {

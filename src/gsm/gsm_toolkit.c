@@ -133,4 +133,35 @@ gsmr_t gsm_save_active_profile(const gsm_api_cmd_evt_fn evt_fn,
 			gsmi_initiate_cmd, 2000);
 }
 
+/**
+ * \brief           Send a restricted SIM access command (AT+CRSM)
+ *
+ * See SIM800 AT command reference for details on the AT+CRSM command.
+ *
+ * \param[in]       command: The command to send
+ * \param[in]       fileId: identifier for file on SIM
+ * \param[in]       param: Array of 3 integer parameters (in the range 0-255)
+ * \param[in]		data: Data relevant to the particular command
+ * \return          \ref gsmOK on success, member of \ref gsmr_t enumeration otherwise
+ */
+gsmr_t gsm_restricted_sim_access(const uint32_t command, const uint32_t fileId,
+		const uint8_t *param, const char *data) {
+	GSM_MSG_VAR_DEFINE(msg);
+
+	uint8_t blocking = 0;
+	GSM_MSG_VAR_ALLOC(msg);
+	msg->evt_fn = NULL;
+	msg->evt_arg = NULL;
+	GSM_MSG_VAR_REF(msg).cmd_def = GSM_CMD_RESTRICTED_SIM_ACCESS;
+	GSM_MSG_VAR_REF(msg).msg.restricted_sim_access.command = command;
+	GSM_MSG_VAR_REF(msg).msg.restricted_sim_access.fileId = fileId;
+	for (int i = 0; i < 3; i++) {
+		GSM_MSG_VAR_REF(msg).msg.restricted_sim_access.param[i] = param[i];
+	}
+	strcpy(GSM_MSG_VAR_REF(msg).msg.restricted_sim_access.data, data);
+
+	return gsmi_send_msg_to_producer_mbox(&GSM_MSG_VAR_REF(msg),
+			gsmi_initiate_cmd, 2000);
+}
+
 #endif

@@ -464,6 +464,7 @@ typedef enum gsm_cb_type_t {
 	GSM_EVT_TOOLKIT_RESPONSE,
 	GSM_EVT_TOOLKIT_URC,
 	GSM_EVT_PROFILE_SAVED,
+	GSM_EVT_RESTRICTED_SIM_ACCESS,
 #endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
 } gsm_evt_type_t;
 
@@ -586,6 +587,9 @@ typedef struct gsm_evt {
         struct {
         	gsmr_t res;
         } save_profile;
+        struct {
+        	gsmr_t res;
+        } restricted_sim_access;
 #endif /*  */
     } evt;                                      /*!< Callback event union */
 } gsm_evt_t;

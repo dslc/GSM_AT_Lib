@@ -30,6 +30,8 @@ gsmr_t gsm_toolkit_response(const char *result, const char *text,
 		const uint32_t blocking);
 gsmr_t gsm_save_active_profile(const gsm_api_cmd_evt_fn evt_fn,
 		void* const evt_arg, const uint32_t blocking);
+gsmr_t gsm_restricted_sim_access(const uint32_t command, const uint32_t fileId,
+		const uint8_t *param, const char *data);
 
 #ifdef __cplusplus
 }

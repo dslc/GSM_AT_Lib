@@ -260,6 +260,7 @@ typedef enum {
 	GSM_CMD_TOOLKIT_RAW_CMD,					/*!< Send a raw command to the SIM application toolkit */
 	GSM_CMD_TOOLKIT_RESPONSE,					/*!< Send a terminal response to teh SIM application toolkit */
 	GSM_CMD_SAVE_PROFILE,						/*!< Save the current SIM profile */
+	GSM_CMD_RESTRICTED_SIM_ACCESS,				/*!< Restricted SIM access */
 
     GSM_CMD_END,                                /*!< Last CMD entry */
 } gsm_cmd_t;
@@ -535,6 +536,12 @@ typedef struct gsm_msg {
         	char text[3];
         	uint8_t use_text;
         } toolkit_response;
+        struct {
+        	uint32_t command;
+        	uint32_t fileId;
+        	uint8_t *param;
+        	char data[32];
+        } restricted_sim_access;
 #endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
         struct {
         	gsm_battery_info_t *curr;
