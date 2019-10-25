@@ -12,6 +12,16 @@ extern "C" {
 
 #include "gsm/gsm.h"
 
+// Restricted SIM access commands
+typedef enum {
+	GSM_CRSM_READ_BINARY = 176,
+	GSM_CRSM_READ_RECORD = 178,
+	GSM_CRSM_GET_RESPONSE = 192,
+	GSM_CRSM_UPDATE_BINARY = 214,
+	GSM_CRSM_UPDATE_RECORD = 220,
+	GSM_CRSM_STATUS = 242,
+} gsm_crsm_cmd_t;
+
 typedef struct {
 	char buf[128];
 	int len;
@@ -30,7 +40,7 @@ gsmr_t gsm_toolkit_response(const char *result, const char *text,
 		const uint32_t blocking);
 gsmr_t gsm_save_active_profile(const gsm_api_cmd_evt_fn evt_fn,
 		void* const evt_arg, const uint32_t blocking);
-gsmr_t gsm_restricted_sim_access(const uint32_t command, const uint32_t fileId,
+gsmr_t gsm_restricted_sim_access(const gsm_crsm_cmd_t command, const uint32_t fileId,
 		const uint8_t *param, const char *data);
 
 #ifdef __cplusplus

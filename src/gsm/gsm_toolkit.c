@@ -144,7 +144,7 @@ gsmr_t gsm_save_active_profile(const gsm_api_cmd_evt_fn evt_fn,
  * \param[in]		data: Data relevant to the particular command
  * \return          \ref gsmOK on success, member of \ref gsmr_t enumeration otherwise
  */
-gsmr_t gsm_restricted_sim_access(const uint32_t command, const uint32_t fileId,
+gsmr_t gsm_restricted_sim_access(const gsm_crsm_cmd_t command, const uint32_t fileId,
 		const uint8_t *param, const char *data) {
 	GSM_MSG_VAR_DEFINE(msg);
 
@@ -161,7 +161,7 @@ gsmr_t gsm_restricted_sim_access(const uint32_t command, const uint32_t fileId,
 	strcpy(GSM_MSG_VAR_REF(msg).msg.restricted_sim_access.data, data);
 
 	return gsmi_send_msg_to_producer_mbox(&GSM_MSG_VAR_REF(msg),
-			gsmi_initiate_cmd, 2000);
+			gsmi_initiate_cmd, 5000);
 }
 
 #endif
