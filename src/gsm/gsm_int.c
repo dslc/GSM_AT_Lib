@@ -1675,9 +1675,10 @@ gsmi_initiate_cmd(gsm_msg_t* msg) {
             /**
              * \todo: If CFUN command forced, check value
              */
-            if (CMD_IS_DEF(GSM_CMD_RESET)
-                || (CMD_IS_DEF(GSM_CMD_CFUN_SET) && msg->msg.cfun.mode)) {
+            if (CMD_IS_DEF(GSM_CMD_RESET)) {
                 AT_PORT_SEND_CONST_STR("1");
+            } else if (CMD_IS_DEF(GSM_CMD_CFUN_SET) && msg->msg.cfun.mode) {
+                gsmi_send_number(msg->msg.cfun.mode, 0, 0);
             } else {
                 AT_PORT_SEND_CONST_STR("0");
             }
