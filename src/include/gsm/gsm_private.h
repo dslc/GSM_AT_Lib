@@ -539,7 +539,7 @@ typedef struct gsm_msg {
         struct {
         	uint32_t command;
         	uint32_t fileId;
-        	uint8_t *param;
+        	uint8_t param[3];
         	char data[32];
         } restricted_sim_access;
 #endif /* GSM_CFG_TOOLKIT || __DOXYGEN__ */
